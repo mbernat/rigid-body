@@ -60,6 +60,7 @@ executable sdl
   build-depends:       base >=4.8 && <4.9
                      , sdl2
                      , linear
+                     , netwire
 
   -- Directories containing source files.
   hs-source-dirs:      src
