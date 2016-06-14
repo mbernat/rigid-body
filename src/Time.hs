@@ -1,8 +1,9 @@
 module Time
-    ( step )
+    ( loop )
 where
 
 import Control.Concurrent
+import Control.Monad
 import Data.Time.Clock
 
 import Types
@@ -11,10 +12,10 @@ import Types
 timeToMicro :: DTime -> Int
 timeToMicro = round . (* 10^6)
 
-step :: DTime -> IO () -> IO (Maybe DTime)
+step :: DTime -> IO a -> IO (Maybe DTime)
 step delta comp = do
   begin <- getCurrentTime
-  comp
+  void comp
   end <- getCurrentTime
   let diff = diffUTCTime end begin
   if diff > delta then
@@ -23,3 +24,5 @@ step delta comp = do
     threadDelay . timeToMicro $ delta - diff
     pure Nothing
 
+loop :: DTime -> IO a -> IO b
+loop delta = forever . step delta

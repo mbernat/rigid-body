@@ -13,7 +13,7 @@ update :: State -> State
 update (State x) = State $ x+1
              
 game :: DTime -> MVar State -> IO ()
-game delta state = forever . step delta $ do 
+game delta state = loop delta $ do
     modifyMVar_ state (pure . update)
 
     
