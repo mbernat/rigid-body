@@ -51,7 +51,11 @@ executable sdl
   main-is:             Main.hs
 
   -- Modules included in this executable, other than Main.
-  -- other-modules:
+  other-modules:
+                       Game
+                       Types
+                       Render
+                       Time
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -60,7 +64,8 @@ executable sdl
   build-depends:       base >=4.8 && <4.9
                      , sdl2
                      , linear
-                     , netwire
+                     , time
+
 
   -- Directories containing source files.
   hs-source-dirs:      src
