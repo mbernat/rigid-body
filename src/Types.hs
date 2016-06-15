@@ -6,10 +6,15 @@ module Types
 where
 
 import Data.Time.Clock
+import SDL.Input (Scancode)
 
 
-data State = State Int
+data State = State
+    { pos :: Int
+    }
 
-data Input = Input Bool
+data Input = Input
+    { keyboard :: Scancode -> Bool
+    }
 
 type DTime = NominalDiffTime

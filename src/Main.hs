@@ -9,26 +9,36 @@ import SDL.Event
 import SDL.Init (initializeAll)
 import SDL.Input
 
+import Time
 import Types
 import Render
-import Game              
-       
+import Game
+
 
 main :: IO ()
 main = do
     initializeAll
     window <- createWindow "My SDL Application" defaultWindow
     renderer <- createRenderer window (-1) defaultRenderer
-    
+    initialKeyboard <- getKeyboardState
+
     state <- newMVar $ State 10
-    void . forkIO $ render renderDelta renderer state
-    void . forkIO $ game gameDelta state
-    threadDelay $ 10^7
+    input <- newMVar $ Input initialKeyboard
+
+    run renderDelta $ render renderer state
+    run gameDelta $ game input state
+    void . loop inputDelta $ readInput input
   where
+    run delta = void . forkIO . loop delta
     renderDelta = 0.01 -- 100 FPS
     gameDelta = 0.001  -- 1000 FPS
+    inputDelta = 0.01 -- 100 FPS
 
-
+readInput :: MVar Input -> IO ()
+readInput input = do
+    keyboard <- getKeyboardState
+    print $ keyboard ScancodeA
+    void . swapMVar input $ Input keyboard
 {-
 
 Architecture:
@@ -44,8 +54,11 @@ and user input. Let's call it a controlled simulation.
 Another function will take care of rendering the state (either directly
 or to something like diagrams, which will be subsequently passed to
 the actual backend). This function will run in another thread and
-another rate and will simply pick whatever state is currently available.  
+another rate and will simply pick whatever state is currently available.
 
+3. Input
+a) listen to events
+b) poll state
 
 
 Note: I'm not sure how FRP is supposed to help us here.
@@ -54,6 +67,7 @@ rendering (a la React) and perhaps in game stepping too.
 
 -}
 
+{-
 getInput :: IO Input
 getInput  = do
     events <- pollEvents
@@ -63,6 +77,6 @@ getInput  = do
                     keyboardEventKeyMotion keyboardEvent == Pressed &&
                     keysymKeycode (keyboardEventKeysym keyboardEvent) == KeycodeQ
                 _ -> False
-        qPressed = not (null (filter eventIsQPress events))
+        qPressed = any eventIsQPress events
     return $ Input qPressed
-
+-}

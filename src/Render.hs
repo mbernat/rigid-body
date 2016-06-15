@@ -18,8 +18,8 @@ import Types
 makeRect :: (Num a) => Point V2 a -> a -> Rectangle a
 makeRect (P (V2 x y)) h = Rectangle (P $ V2 (x - h) (y - h)) (V2 h h)
 
-render :: DTime -> Renderer -> MVar State -> IO ()
-render delta renderer state = loop delta $ do
+render :: Renderer -> MVar State -> IO ()
+render renderer state = do
     (State x) <- readMVar state
     rendererDrawColor renderer $= V4 0 0 0 255
     clear renderer
