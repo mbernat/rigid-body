@@ -3,11 +3,9 @@ module Main (main) where
 
 import Control.Concurrent
 import Control.Monad
-import SDL.Video (createWindow, defaultWindow, createRenderer)
-import SDL.Video.Renderer
-import SDL.Event
-import SDL.Init (initializeAll)
-import SDL.Input
+
+import SFML.Graphics
+import SFML.Window
 
 import Time
 import Types
@@ -17,15 +15,13 @@ import Game
 
 main :: IO ()
 main = do
-    initializeAll
-    window <- createWindow "My SDL Application" defaultWindow
-    renderer <- createRenderer window (-1) defaultRenderer
-    initialKeyboard <- getKeyboardState
+    let ctxSettings = Just $ ContextSettings 24 8 0 1 2 [ContextDefault]
+    wnd <- createRenderWindow (VideoMode 640 480 32) "SFML Haskell Demo" [SFDefaultStyle] ctxSettings
 
     state <- newMVar $ State 10
-    input <- newMVar $ Input initialKeyboard
+    input <- newMVar $ Input (const False)
 
-    run renderDelta $ render renderer state
+    run renderDelta $ render wnd state
     run gameDelta $ game input state
     void . loop inputDelta $ readInput input
   where
@@ -36,9 +32,9 @@ main = do
 
 readInput :: MVar Input -> IO ()
 readInput input = do
-    keyboard <- getKeyboardState
-    print $ keyboard ScancodeA
-    void . swapMVar input $ Input keyboard
+    pressed <- isKeyPressed KeyA
+    print pressed
+    void . swapMVar input $ Input $ \key -> (key == KeyA) && pressed
 {-
 
 Architecture:

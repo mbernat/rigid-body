@@ -6,7 +6,7 @@ module Types
 where
 
 import Data.Time.Clock
-import SDL.Input (Scancode)
+import SFML.Window.Keyboard (KeyCode)
 
 
 data State = State
@@ -14,7 +14,7 @@ data State = State
     }
 
 data Input = Input
-    { keyboard :: Scancode -> Bool
+    { keyboard :: KeyCode -> Bool
     }
 
 type DTime = NominalDiffTime

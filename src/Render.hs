@@ -8,25 +8,22 @@ import Data.Time.Clock
 import Foreign.C.Types
 import Linear (V4(..), V2(..))
 import Linear.Affine (Point(..))
-import SDL.Video.Renderer
-import SDL (($=))
+import SFML.Graphics
+import SFML.System
 
 import Time
 import Types
 
 
-makeRect :: (Num a) => Point V2 a -> a -> Rectangle a
-makeRect (P (V2 x y)) h = Rectangle (P $ V2 (x - h) (y - h)) (V2 h h)
-
-render :: Renderer -> MVar State -> IO ()
-render renderer state = do
+render :: RenderWindow -> MVar State -> IO ()
+render wnd state = do
     (State x) <- readMVar state
-    rendererDrawColor renderer $= V4 0 0 0 255
-    clear renderer
+    clearRenderWindow wnd black
 
-    let xx = CInt $ fromIntegral x
-    rendererDrawColor renderer $= V4 255 255 255 255
-    fillRect renderer $ Just $ makeRect (P (V2 xx 200)) 100
+    rect <- err createRectangleShape
+    setSize rect (Vec2f 100 100)
+    setPosition rect (Vec2f (fromIntegral x) 300)
+    setFillColor rect white
 
-    present renderer
-
+    drawRectangle wnd rect Nothing
+    display wnd

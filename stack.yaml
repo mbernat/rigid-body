@@ -3,5 +3,6 @@ extra-package-dbs: []
 packages:
 - '.'
 extra-deps:
-- netwire-5.0.0
+- SFML-2.3.2.2
+
 resolver: lts-6.1

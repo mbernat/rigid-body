@@ -62,7 +62,7 @@ executable sdl
 
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.8 && <4.9
-                     , sdl2
+                     , SFML
                      , linear
                      , time
 
