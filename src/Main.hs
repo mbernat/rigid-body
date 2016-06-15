@@ -36,8 +36,8 @@ main = do
 
 readInput :: MVar Input -> IO ()
 readInput input = do
+    pumpEvents
     keyboard <- getKeyboardState
-    print $ keyboard ScancodeA
     void . swapMVar input $ Input keyboard
 {-
 
