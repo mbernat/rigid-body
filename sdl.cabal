@@ -65,6 +65,7 @@ executable sdl
                      , sdl2
                      , linear
                      , time
+                     , containers
 
 
   -- Directories containing source files.

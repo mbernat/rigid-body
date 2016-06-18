@@ -20,13 +20,16 @@ makeRect (P (V2 x y)) h = Rectangle (P $ V2 (x - h) (y - h)) (V2 h h)
 
 render :: Renderer -> MVar State -> IO ()
 render renderer state = do
-    (State x) <- readMVar state
+    s <- readMVar state
+
     rendererDrawColor renderer $= V4 0 0 0 255
     clear renderer
 
-    let xx = CInt $ fromIntegral x
+    let (V2 x y) = pos s
+    let toCInt = CInt . fromIntegral . round
+    let iPos = fmap toCInt (pos s)
     rendererDrawColor renderer $= V4 255 255 255 255
-    fillRect renderer $ Just $ makeRect (P (V2 xx 200)) 100
+    fillRect renderer $ Just $ makeRect (P iPos) 100
 
     present renderer
 

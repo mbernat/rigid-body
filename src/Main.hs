@@ -1,8 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
+
+
 import Control.Concurrent
 import Control.Monad
+
+import qualified Data.Map.Strict as Map
+import Linear
 import SDL.Video (createWindow, defaultWindow, createRenderer)
 import SDL.Video.Renderer
 import SDL.Event
@@ -20,25 +25,38 @@ main = do
     initializeAll
     window <- createWindow "My SDL Application" defaultWindow
     renderer <- createRenderer window (-1) defaultRenderer
-    initialKeyboard <- getKeyboardState
 
-    state <- newMVar $ State 10
-    input <- newMVar $ Input initialKeyboard
+    state <- newMVar $ State 300 0
+    input <- newMVar $ Input Map.empty
 
     run renderDelta $ render renderer state
     run gameDelta $ game input state
-    void . loop inputDelta $ readInput input
+    void . loop inputDelta $ pollInput input
   where
     run delta = void . forkIO . loop delta
     renderDelta = 0.01 -- 100 FPS
     gameDelta = 0.001  -- 1000 FPS
-    inputDelta = 0.01 -- 100 FPS
+    inputDelta = 0.001 -- 100 FPS
 
-readInput :: MVar Input -> IO ()
-readInput input = do
-    pumpEvents
-    keyboard <- getKeyboardState
-    void . swapMVar input $ Input keyboard
+updateInput :: Event -> Input -> Input
+updateInput event input =
+    case eventPayload event of
+        KeyboardEvent keyboardEvent ->
+            Input $ case keyboardEventKeyMotion keyboardEvent of
+                Pressed -> Map.insert scanCode () keys
+                Released -> Map.delete scanCode keys
+              where scanCode = keysymScancode $ keyboardEventKeysym keyboardEvent
+        _ -> input
+  where
+    keys = keyboard input
+
+pollInput :: MVar Input -> IO ()
+pollInput input = do
+    events <- pollEvents
+    let update = foldl comp id events
+    modifyMVar_ input (return . update)
+  where
+    comp up ev = updateInput ev . up
 {-
 
 Architecture:
@@ -67,16 +85,3 @@ rendering (a la React) and perhaps in game stepping too.
 
 -}
 
-{-
-getInput :: IO Input
-getInput  = do
-    events <- pollEvents
-    let eventIsQPress event =
-            case eventPayload event of
-                KeyboardEvent keyboardEvent ->
-                    keyboardEventKeyMotion keyboardEvent == Pressed &&
-                    keysymKeycode (keyboardEventKeysym keyboardEvent) == KeycodeQ
-                _ -> False
-        qPressed = any eventIsQPress events
-    return $ Input qPressed
--}
