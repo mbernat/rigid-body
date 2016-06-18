@@ -21,6 +21,8 @@ makeRect (P (V2 x y)) h = Rectangle (P $ V2 (x - h) (y - h)) (V2 h h)
 render :: Renderer -> MVar State -> IO ()
 render renderer state = do
     s <- readMVar state
+    print (pos s)
+    print (vel s)
 
     rendererDrawColor renderer $= V4 0 0 0 255
     clear renderer
