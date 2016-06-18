@@ -2,7 +2,8 @@ flags: {}
 extra-package-dbs: []
 packages:
 - '.'
-extra-deps:
-- SFML-2.3.2.2
+extra-deps: []
+
+
 
 resolver: lts-6.1

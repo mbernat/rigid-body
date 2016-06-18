@@ -4,7 +4,7 @@ where
 
 import Control.Concurrent
 import Control.Monad
-import SFML.Window.Keyboard
+import Graphics.GPipe.Context.GLFW.Input
 
 import Time
 import Types
@@ -15,7 +15,7 @@ update input state = State pos'
   where
     pos' = pos state + mod
     k = keyboard input
-    mod = if k KeyA then -1 else 1
+    mod = if k Key'A then -1 else 1
 
 game :: MVar Input -> MVar State -> IO ()
 game input state = do

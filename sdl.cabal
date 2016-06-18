@@ -62,9 +62,11 @@ executable sdl
 
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.8 && <4.9
-                     , SFML
                      , linear
                      , time
+                     , GPipe
+                     , GPipe-GLFW
+                     , transformers
 
 
   -- Directories containing source files.
@@ -72,3 +74,5 @@ executable sdl
 
   -- Base language which the package is written in.
   default-language:    Haskell2010
+
+  ghc-options:        -threaded

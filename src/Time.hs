@@ -4,6 +4,7 @@ where
 
 import Control.Concurrent
 import Control.Monad
+import Control.Monad.IO.Class
 import Data.Time.Clock
 
 import Types
@@ -12,17 +13,17 @@ import Types
 timeToMicro :: DTime -> Int
 timeToMicro = round . (* 10^6)
 
-step :: DTime -> IO a -> IO (Maybe DTime)
+step :: MonadIO m => DTime -> m a -> m (Maybe DTime)
 step delta comp = do
-  begin <- getCurrentTime
+  begin <- liftIO getCurrentTime
   void comp
-  end <- getCurrentTime
+  end <- liftIO getCurrentTime
   let diff = diffUTCTime end begin
   if diff > delta then
     pure . Just $ diff - delta
   else do
-    threadDelay . timeToMicro $ delta - diff
+    liftIO . threadDelay . timeToMicro $ delta - diff
     pure Nothing
 
-loop :: DTime -> IO a -> IO b
+loop :: MonadIO m => DTime -> m a -> m b
 loop delta = forever . step delta

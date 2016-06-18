@@ -4,37 +4,25 @@ module Main (main) where
 import Control.Concurrent
 import Control.Monad
 
-import SFML.Graphics
-import SFML.Window
+import Control.Monad.IO.Class
 
 import Time
 import Types
-import Render
+import qualified Render
 import Game
 
 
-main :: IO ()
 main = do
-    let ctxSettings = Just $ ContextSettings 24 8 0 1 2 [ContextDefault]
-    wnd <- createRenderWindow (VideoMode 640 480 32) "SFML Haskell Demo" [SFDefaultStyle] ctxSettings
-
     state <- newMVar $ State 10
     input <- newMVar $ Input (const False)
 
-    run renderDelta $ render wnd state
+    Render.run input state
     run gameDelta $ game input state
-    void . loop inputDelta $ readInput input
   where
     run delta = void . forkIO . loop delta
-    renderDelta = 0.01 -- 100 FPS
-    gameDelta = 0.001  -- 1000 FPS
-    inputDelta = 0.01 -- 100 FPS
 
-readInput :: MVar Input -> IO ()
-readInput input = do
-    pressed <- isKeyPressed KeyA
-    print pressed
-    void . swapMVar input $ Input $ \key -> (key == KeyA) && pressed
+    gameDelta = 0.001  -- 1000 FPS
+
 {-
 
 Architecture:
