@@ -36,7 +36,7 @@ main = do
     run delta = void . forkIO . loop delta
     renderDelta = 0.01 -- 100 FPS
     gameDelta = 0.001  -- 1000 FPS
-    inputDelta = 0.001 -- 100 FPS
+    inputDelta = 0.001 -- 1000 FPS
 
 updateInput :: Event -> Input -> Input
 updateInput event input =

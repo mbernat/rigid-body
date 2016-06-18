@@ -23,7 +23,7 @@ codeMove :: Scancode -> V2 Float
 codeMove = \case
     ScancodeA -> V2 (-0.05) 0
     ScancodeD -> V2 (0.05) 0
-    ScancodeSpace -> V2 0 (-0.5)
+    ScancodeSpace -> V2 0 (-0.3)
     _ -> V2 0 0
 
 {-
@@ -40,18 +40,12 @@ correct physics would look as follows:
 update :: Input -> State -> State
 update input state =
     if ground
-       then if slow then inputState
-            else if falling then bounceState
-                 else stepGroundState
+       then if falling then bounceState
+            else stepGroundState
     else stepAirState
   where
-    inputState = State
-        { pos = V2 (x + vx) 300
-        , vel = modVel
-        }
-
     stepGroundState = State
-        { pos = pos state + vel state
+        { pos = if slow then V2 x 300 else pos state + vel state
         , vel = V2 (vx * drag) (vy + gravity)
           + modVel
         }
