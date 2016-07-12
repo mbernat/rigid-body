@@ -2,6 +2,5 @@ flags: {}
 extra-package-dbs: []
 packages:
 - '.'
-extra-deps:
-- netwire-5.0.0
+extra-deps: []
 resolver: lts-6.1

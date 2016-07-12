@@ -23,7 +23,7 @@ import Game
 main :: IO ()
 main = do
     initializeAll
-    window <- createWindow "My SDL Application" defaultWindow
+    window <- createWindow "Rigid Body Dynamics" defaultWindow
     renderer <- createRenderer window (-1) defaultRenderer
 
     state <- newMVar $ State 300 0
