@@ -1,8 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-
-
 import Control.Concurrent
 import Control.Monad
 
@@ -17,7 +15,7 @@ import SDL.Input
 import Time
 import Types
 import Render
-import Game
+import Forces
 
 
 main :: IO ()
@@ -26,16 +24,16 @@ main = do
     window <- createWindow "Rigid Body Dynamics" defaultWindow
     renderer <- createRenderer window (-1) defaultRenderer
 
-    state <- newMVar $ State 300 0
+    state <- newMVar $ State [Particle 200 0, Particle 400 0]
     input <- newMVar $ Input Map.empty
 
     run renderDelta $ render renderer state
-    run gameDelta $ game input state
+    run forcesDelta $ forces input state
     void . loop inputDelta $ pollInput input
   where
     run delta = void . forkIO . loop delta
     renderDelta = 0.01 -- 100 FPS
-    gameDelta = 0.001  -- 1000 FPS
+    forcesDelta = 0.001  -- 1000 FPS
     inputDelta = 0.001 -- 1000 FPS
 
 updateInput :: Event -> Input -> Input

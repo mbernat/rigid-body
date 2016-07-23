@@ -2,6 +2,7 @@ module Types
     ( DTime
     , Input(..)
     , State(..)
+    , Particle(..)
     )
 where
 
@@ -12,6 +13,10 @@ import SDL.Input (Scancode)
 
 
 data State = State
+    { particles :: [Particle]
+    }
+
+data Particle = Particle
     { pos :: V2 Float
     , vel :: V2 Float
     }

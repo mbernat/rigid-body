@@ -57,8 +57,8 @@ is just a simple calculation based on their positions and velocities.
 -- This is also necessary to handle collisions properly using bisection
 -- to find the exact time of the first collision.
 
-update :: Input -> State -> State
-update input State{..} = State
+update :: Input -> Particle -> Particle
+update input Particle{..} = Particle
     { pos = pos + vel'
     , vel = vel'
     }
@@ -91,4 +91,6 @@ update input State{..} = State
 game :: MVar Input -> MVar State -> IO ()
 game input state = do
     i <- readMVar input
-    modifyMVar_ state (pure . update i)
+    s <- takeMVar state
+    let np = map (update i) (particles s)
+    putMVar state s{particles = np}

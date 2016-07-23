@@ -18,20 +18,22 @@ import Types
 makeRect :: (Num a) => Point V2 a -> a -> Rectangle a
 makeRect (P (V2 x y)) h = Rectangle (P $ V2 (x - h) (y - h)) (V2 h h)
 
+renderParticle :: Renderer -> Particle -> IO ()
+renderParticle renderer p = do
+    let (V2 x y) = pos p
+    let toCInt = CInt . fromIntegral . round
+    let iPos = fmap toCInt (pos p)
+    rendererDrawColor renderer $= V4 255 255 255 255
+    fillRect renderer $ Just $ makeRect (P iPos) 100
+
 render :: Renderer -> MVar State -> IO ()
 render renderer state = do
-    s <- readMVar state
-    print (pos s)
-    print (vel s)
+    ps <- readMVar state
 
     rendererDrawColor renderer $= V4 0 0 0 255
     clear renderer
 
-    let (V2 x y) = pos s
-    let toCInt = CInt . fromIntegral . round
-    let iPos = fmap toCInt (pos s)
-    rendererDrawColor renderer $= V4 255 255 255 255
-    fillRect renderer $ Just $ makeRect (P iPos) 100
+    mapM_ (renderParticle renderer) (particles ps)
 
     present renderer
 
