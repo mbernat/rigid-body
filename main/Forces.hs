@@ -7,8 +7,8 @@ where
 import Control.Concurrent
 import Linear.Affine
 
-import Physics hiding (forces)
-import qualified Physics
+import RigidBody.Physics hiding (forces)
+import qualified RigidBody.Physics as Physics
 import qualified Types
 
 

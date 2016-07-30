@@ -1,5 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
-module Physics
+module RigidBody.Physics
     ( Collisions(..)
     , Force(..)
     , Forces(..)

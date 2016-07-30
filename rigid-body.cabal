@@ -48,7 +48,7 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:
-                        Physics
+                  RigidBody.Physics
 
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.8 && <4.9
@@ -69,7 +69,7 @@ executable rigid-body-view
   -- Modules included in this executable, other than Main.
   other-modules:
                 Forces
-                Physics
+                RigidBody.Physics
                 Render
                 Time
                 Types
