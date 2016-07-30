@@ -25,7 +25,8 @@ update i s = Types.State
 
 mkParticle :: [Types.Particle] -> Types.Particle -> Particle Float
 mkParticle particles Types.Particle{..} = Particle
-    { pos = P pos
+    { mass = 1
+    , pos = P pos
     , vel = vel
     , Physics.forces = []
     }

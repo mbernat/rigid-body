@@ -23,8 +23,15 @@ data World a = World
     { particles :: [Particle a]
     }
 
+{- TODO
+Think about separating static information (such as mass)
+from dynamic information (position).
+OTOH, perhaps allowing change of mass for applications such as
+the Ciolkovsky's rocket equation is better approach anyway.
+-}
 data Particle a = Particle
-    { pos :: Point V2 a
+    { mass :: a
+    , pos :: Point V2 a
     , vel :: V2 a
     , forces :: [Force a]
     }
@@ -88,7 +95,7 @@ smallStep fs dt World{..} = World
         }
       where
         pos' = pos .+^ ((vel + vel') ^/ 2.0) ^* dt
-        vel' = vel + totalForce ^* dt
+        vel' = vel + (totalForce ^/ mass) ^* dt
         totalForce = ambientForces + relativeForces
         ambientForces = sum $ ambient fs
         relativeForces = sum $ map force forces
