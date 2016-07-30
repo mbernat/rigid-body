@@ -70,7 +70,6 @@ executable rigid-body-view
   other-modules:
                 Forces
                 Types
-                Physics
                 Render
                 Time
 
